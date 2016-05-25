@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -o errexit
+
+echo " + Updating letsencrypt.sh..."
+git submodule update --remote
+cd letsencrypt.sh
+
+echo " + Updating domains.txt..."
+nfsn -s list-aliases > domains.txt
+
+echo " + Running letsencrypt.sh..."
+./letsencrypt.sh --cron
+
+echo " + Cleaning up old certificates..."
+./letsencrypt.sh --cleanup
