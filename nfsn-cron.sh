@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -o errexit
 
+cd $(dirname $0)
+
+echo " + Updating lets-nfsn.sh..."
+git pull
+
 echo " + Updating letsencrypt.sh..."
 git submodule update --remote
 cd letsencrypt.sh
