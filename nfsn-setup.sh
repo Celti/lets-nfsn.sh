@@ -20,7 +20,24 @@ echo " + Performing initial run..."
 letsencrypt.sh/letsencrypt.sh --cron
 
 user_site=${MAIL##*/}
-echo " + Done! Now add $(realpath nfsn-cron.sh) to your scheduled tasks!"
-echo "   You can find them at https://members.nearlyfreespeech.net/${user_site%_*}/sites/${NFSN_SITE_NAME}/cron"
-echo "   letsencrypt.sh will not try and renew the script unless it expires in less than 30 days."
-echo "   I recommend running it daily, to ensure plenty of warning if the renewal fails."
+printf '
+   Now add nfsn-cron.sh to your scheduled tasks so that the certificates will be
+   renewed automatically.  To do that, go to
+
+       https://members.nearlyfreespeech.net/%s/sites/%s/cron
+
+   and use the following settings:
+
+       Tag:                  lets-nfsn
+       URL or Shell Command: %q %q
+       User:                 me
+       Hour:                 %d
+       Day of Week:          Every
+       Date:                 *
+
+   The certificates will be renewed only when needed so it’s safe to schedule
+   the task to run daily.
+' \
+       "${user_site%_*}" "$NFSN_SITE_NAME" \
+       "$BASH" "$(realpath nfsn-cron.sh)" \
+       "$(( $RANDOM % 24 ))"
