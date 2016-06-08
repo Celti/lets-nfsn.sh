@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eu
 
 function deploy_challenge {
     local DOMAIN="${1}" TOKEN_FILENAME="${2}" TOKEN_VALUE="${3}"

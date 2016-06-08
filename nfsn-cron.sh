@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o errexit
+set -eu
 
 cd $(dirname $0)
 

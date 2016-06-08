@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -o errexit
+set -eu
 
 echo " + Cloning letsencrypt.sh git repository..."
 git submodule init
