@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu
 
-cd $(dirname $0)
+cd "$(dirname "$0")"
 
 echo " + Updating lets-nfsn.sh..."
 git pull

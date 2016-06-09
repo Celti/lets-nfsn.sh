@@ -14,7 +14,7 @@ function clean_challenge {
 function deploy_cert {
     local DOMAIN="${1}" KEYFILE="${2}" CERTFILE="${3}" FULLCHAINFILE="${4}" CHAINFILE="${5}" TIMESTAMP="${6}"
     echo " + Installing new certificate for ${DOMAIN}..."
-    cat $KEYFILE $CERTFILE $CHAINFILE | nfsn -i set-tls
+    cat "$KEYFILE" "$CERTFILE" "$CHAINFILE" | nfsn -i set-tls
 }
 
 function unchanged_cert {
@@ -26,4 +26,4 @@ function unchanged_cert {
     echo " + Certificate for ${DOMAIN} unchanged."
 }
 
-HANDLER=$1; shift; $HANDLER $@
+"$@"
