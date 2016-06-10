@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-set -o errexit
+set -o errexit -o nounset -o pipefail
 
-cd $(dirname $0)
+cd "$(dirname "$0")"
 
 echo " + Updating lets-nfsn.sh..."
 git pull
