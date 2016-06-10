@@ -1,29 +1,33 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
 
+readonly well_known='.well-known/acme-challenge/'
+
 echo " + Cloning letsencrypt.sh git repository..."
 git submodule init
 git submodule update
 
-echo " + Setting challenge directory..."
-WELLKNOWN="${DOCUMENT_ROOT}.well-known/acme-challenge"
-echo "WELLKNOWN='${WELLKNOWN}'" > letsencrypt.sh/config
-mkdir -p "${WELLKNOWN}"
-
-echo " + Symlinking challenge directory into document root(s)..."
+echo " + Generating alias configuration..."
 for site_root in $(nfsn list-aliases); do
    if [[ -d "${DOCUMENT_ROOT}${site_root}/" ]]; then
-      mkdir -p "${DOCUMENT_ROOT}${site_root}/.well-known/"
-      ln -s "${WELLKNOWN}" "${DOCUMENT_ROOT}${site_root}/.well-known/acme-challenge"
+      WELLKNOWN="${DOCUMENT_ROOT}${site_root}/${well_known}"
+      CONFIGDIR="letsencrypt.sh/certs/${site_root}/"
+      mkdir -p "${WELLKNOWN}" "${CONFIGDIR}"
+      echo "WELLKNOWN='${WELLKNOWN}'" > "${CONFIGDIR}/config"
+      individual_certs=true
    fi
 done
+
+echo " + Generating fallback configuration..."
+mkdir -p "${DOCUMENT_ROOT}${well_known}"
+echo "WELLKNOWN='${DOCUMENT_ROOT}${well_known}'" > letsencrypt.sh/config
 
 echo " + Installing hook script..."
 chmod +x nfsn-hook.sh
 echo "HOOK='$(realpath nfsn-hook.sh)'" >> letsencrypt.sh/config
 
 echo " + Generating domains.txt..."
-nfsn -s list-aliases > letsencrypt.sh/domains.txt
+nfsn ${individual_certs:+-s} list-aliases > letsencrypt.sh/domains.txt
 
 echo " + Performing initial run..."
 letsencrypt.sh/letsencrypt.sh --cron

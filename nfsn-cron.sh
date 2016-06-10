@@ -33,9 +33,6 @@ else
 	exit 0
 fi
 
-echo " + Updating domains.txt..."
-nfsn -s list-aliases > domains.txt
-
 echo " + Running letsencrypt.sh..."
 ./letsencrypt.sh --cron
 
