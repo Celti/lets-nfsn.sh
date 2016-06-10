@@ -19,16 +19,14 @@ echo " + Updating letsencrypt.sh..."
 git submodule update --remote
 cd letsencrypt.sh
 
-echo " + /usr/local/bin/nfsn cannot run from cron."
-echo "   If you are executing this from the shell, run:"
-echo "	${PWD}/letsencrypt.sh --cron"
-echo "   to update your certificates."
-echo
-
 echo " + Checking certificate expiration date..."
 declare -a checks=( $(find certs -name cert.pem -type l -exec openssl x509 -checkend 2592000 -in {} \;) )
 if contains "Certificate will expire" "${checks[@]}"; then
-	echo " + Certificte will expire in 30 days or less! Renew soon!"
+	echo " + Certificte will expire in 30 days or less! SSH into this site and"
+	echo "   run the following commands to renew your certificates:"
+	echo "	cd ~/lets-nfsn.sh/letsencrypt.sh/"
+	echo "	./letsencrypt.sh --cron"
+	echo " + This error message will repeat daily."
 	exit 1
 else
 	echo " + More than 30 days until any certificate expires. Exiting."
