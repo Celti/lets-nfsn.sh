@@ -16,8 +16,7 @@ if find certs -name cert.pem -type l \
 		grep -qF "Certificate will expire"; then
 	echo " + Certificte will expire in 30 days or less! SSH into this site and"
 	echo "   run the following commands to renew your certificates:"
-	echo "	cd ~/lets-nfsn.sh/letsencrypt.sh/"
-	echo "	./letsencrypt.sh --cron"
+	printf '	%q --cron\n' "$(realpath letsencrypt.sh)"
 	echo " + This error message will repeat daily."
 	exit 1
 else
