@@ -9,15 +9,18 @@ git submodule init
 git submodule update --remote
 mkdir -p letsencrypt.sh/.acme-challenges
 
+# write_config $config_dir $wellknown
+readonly hook_path=$(realpath nfsn-hook.sh)
+write_config() {
+    mkdir -p -- "$1" "$2"
+    printf '%s=%q\n' WELLKNOWN "$2" HOOK "$hook_path" >"$1/config"
+}
+
 echo " + Generating configuration..."
 for site_root in $(nfsn list-aliases); do
    if [[ -d "${DOCUMENT_ROOT}${site_root}/" ]]; then
-      WELLKNOWN="${DOCUMENT_ROOT}${site_root}/${well_known}"
-      CONFIGDIR="letsencrypt.sh/certs/${site_root}/"
-      mkdir -p "${WELLKNOWN}" "${CONFIGDIR}"
-      echo "WELLKNOWN='${WELLKNOWN}'" > "${CONFIGDIR}/config"
-      echo " + Installing hook script..."
-      echo "HOOK='$(realpath nfsn-hook.sh)'" >> "${CONFIGDIR}/config"
+      write_config "letsencrypt.sh/certs/${site_root}" \
+                   "${DOCUMENT_ROOT}${site_root}/${well_known}"
       chmod +x nfsn-hook.sh
       unset single_cert
    fi
@@ -25,10 +28,7 @@ done
 
 if [[ "${single_cert:+true}" ]]; then
    echo " + Generating fallback configuration..."
-   mkdir -p "${DOCUMENT_ROOT}${well_known}"
-   echo "WELLKNOWN='${DOCUMENT_ROOT}${well_known}'" > letsencrypt.sh/config
-   echo " + Installing hook script..."
-   echo "HOOK='$(realpath nfsn-hook.sh)'" >> letsencrypt.sh/config
+   write_config letsencrypt.sh "${DOCUMENT_ROOT}${well_known}"
    chmod +x nfsn-hook.sh
 fi
 
