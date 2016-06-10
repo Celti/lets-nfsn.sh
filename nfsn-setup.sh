@@ -21,7 +21,6 @@ for site_root in $(nfsn list-aliases); do
    if [[ -d "${DOCUMENT_ROOT}${site_root}/" ]]; then
       write_config "letsencrypt.sh/certs/${site_root}" \
                    "${DOCUMENT_ROOT}${site_root}/${well_known}"
-      chmod +x nfsn-hook.sh
       unset single_cert
    fi
 done
@@ -29,7 +28,6 @@ done
 if [[ "${single_cert:+true}" ]]; then
    echo " + Generating fallback configuration..."
    write_config letsencrypt.sh "${DOCUMENT_ROOT}${well_known}"
-   chmod +x nfsn-hook.sh
 fi
 
 echo " + Generating domains.txt..."
