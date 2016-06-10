@@ -6,15 +6,15 @@ git submodule init
 git submodule update
 
 echo " + Setting challenge directory..."
-WELLKNOWN="${DOCUMENT_ROOT}/.well-known/acme-challenge"
+WELLKNOWN="${DOCUMENT_ROOT}.well-known/acme-challenge"
 echo "WELLKNOWN='${WELLKNOWN}'" > letsencrypt.sh/config
 mkdir -p "${WELLKNOWN}"
 
 echo " + Symlinking challenge directory into document root(s)..."
 for site_root in $(nfsn list-aliases); do
-   if [[ -d "${DOCUMENT_ROOT}/${site_root}/" ]]; then
-      mkdir -p "${DOCUMENT_ROOT}/${site_root}/.well-known/"
-      ln -s "${WELLKNOWN}" "${DOCUMENT_ROOT}/${site_root}/.well-known/acme-challenge"
+   if [[ -d "${DOCUMENT_ROOT}${site_root}/" ]]; then
+      mkdir -p "${DOCUMENT_ROOT}${site_root}/.well-known/"
+      ln -s "${WELLKNOWN}" "${DOCUMENT_ROOT}${site_root}/.well-known/acme-challenge"
    fi
 done
 
