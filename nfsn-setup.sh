@@ -2,6 +2,7 @@
 set -o errexit -o nounset -o pipefail
 
 readonly well_known='.well-known/acme-challenge/'
+declare single_cert='true'
 
 echo " + Cloning letsencrypt.sh git repository..."
 git submodule init
@@ -14,7 +15,7 @@ for site_root in $(nfsn list-aliases); do
       CONFIGDIR="letsencrypt.sh/certs/${site_root}/"
       mkdir -p "${WELLKNOWN}" "${CONFIGDIR}"
       echo "WELLKNOWN='${WELLKNOWN}'" > "${CONFIGDIR}/config"
-      individual_certs=true
+      unset single_cert
    fi
 done
 
@@ -27,7 +28,7 @@ chmod +x nfsn-hook.sh
 echo "HOOK='$(realpath nfsn-hook.sh)'" >> letsencrypt.sh/config
 
 echo " + Generating domains.txt..."
-nfsn ${individual_certs:+-s} list-aliases > letsencrypt.sh/domains.txt
+nfsn ${single_cert:+-s} list-aliases > letsencrypt.sh/domains.txt
 
 echo " + Performing initial run..."
 letsencrypt.sh/letsencrypt.sh --cron
