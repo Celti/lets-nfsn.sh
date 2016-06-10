@@ -6,8 +6,16 @@ git submodule init
 git submodule update
 
 echo " + Setting challenge directory..."
-mkdir -p "${DOCUMENT_ROOT}/.well-known/acme-challenge"
-echo "WELLKNOWN='${DOCUMENT_ROOT}/.well-known/acme-challenge'" > letsencrypt.sh/config
+WELLKNOWN="${DOCUMENT_ROOT}/.well-known/acme-challenge"
+echo "WELLKNOWN='${WELLKNOWN}'" > letsencrypt.sh/config
+mkdir -p "${WELLKNOWN}"
+
+echo " + Symlinking challenge directory into document root(s)..."
+for site_root in $(nfsn list-aliases); do
+   if [[ -d "${DOCUMENT_ROOT}/${site_root}/" ]]; then
+      ln -s "${WELLKNOWN}" "${DOCUMENT_ROOT}/${site_root}/.well-known/acme-challenge"
+   fi
+done
 
 echo " + Installing hook script..."
 chmod +x nfsn-hook.sh
