@@ -19,9 +19,11 @@ for site_root in $(nfsn list-aliases); do
    fi
 done
 
-echo " + Generating fallback configuration..."
-mkdir -p "${DOCUMENT_ROOT}${well_known}"
-echo "WELLKNOWN='${DOCUMENT_ROOT}${well_known}'" > letsencrypt.sh/config
+if [[ "$single_cert" ]]; then
+   echo " + Generating fallback configuration..."
+   mkdir -p "${DOCUMENT_ROOT}${well_known}"
+   echo "WELLKNOWN='${DOCUMENT_ROOT}${well_known}'" > letsencrypt.sh/config
+fi
 
 echo " + Installing hook script..."
 chmod +x nfsn-hook.sh
