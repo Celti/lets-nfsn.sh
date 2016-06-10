@@ -6,7 +6,7 @@ declare single_cert='true'
 
 echo " + Cloning letsencrypt.sh git repository..."
 git submodule init
-git submodule update
+git submodule update --remote
 
 echo " + Generating configuration..."
 for site_root in $(nfsn list-aliases); do
