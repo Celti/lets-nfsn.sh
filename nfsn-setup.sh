@@ -49,8 +49,8 @@ printf '
 
    and use the following settings:
 
-	Tag:                  lets-nfsn
-	URL or Shell Command: %q %q
+	Tag:                  letsencrypt
+	URL or Shell Command: %q
 	User:                 me
 	Hour:                 %d
 	Day of Week:          Every
@@ -65,5 +65,5 @@ printf '
          is within 30 days of expiry.
 ' \
 	"${user_site%_*}" "$NFSN_SITE_NAME" \
-	"$BASH" "$(realpath nfsn-cron.sh)" \
+	"$(realpath nfsn-cron.sh)" \
 	"$(( $RANDOM % 24 ))"
