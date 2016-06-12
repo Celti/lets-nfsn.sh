@@ -8,7 +8,6 @@ declare single_cert='true'
 echo " + Cloning letsencrypt.sh git repository..."
 git submodule init
 git submodule update --remote
-mkdir -p letsencrypt.sh/.acme-challenges
 cd letsencrypt.sh
 
 # write_config $config_dir $wellknown
