@@ -2,15 +2,16 @@
 set -o errexit -o nounset -o pipefail
 
 readonly well_known='.well-known/acme-challenge/'
+readonly hook_path=$(realpath nfsn-hook.sh)
 declare single_cert='true'
 
 echo " + Cloning letsencrypt.sh git repository..."
 git submodule init
 git submodule update --remote
 mkdir -p letsencrypt.sh/.acme-challenges
+cd letsencrypt.sh
 
 # write_config $config_dir $wellknown
-readonly hook_path=$(realpath nfsn-hook.sh)
 write_config() {
     mkdir -p -- "$1" "$2"
     printf '%s=%q\n' WELLKNOWN "$2" HOOK "$hook_path" >"$1/config"
@@ -19,7 +20,7 @@ write_config() {
 echo " + Generating configuration..."
 for site_root in $(nfsn list-aliases); do
    if [[ -d "${DOCUMENT_ROOT}${site_root}/" ]]; then
-      write_config "letsencrypt.sh/certs/${site_root}" \
+      write_config "certs/${site_root}" \
                    "${DOCUMENT_ROOT}${site_root}/${well_known}"
       unset single_cert
    fi
@@ -27,14 +28,14 @@ done
 
 if [[ "${single_cert:+true}" ]]; then
    echo " + Generating fallback configuration..."
-   write_config letsencrypt.sh "${DOCUMENT_ROOT}${well_known}"
+   write_config . "${DOCUMENT_ROOT}${well_known}"
 fi
 
 echo " + Generating domains.txt..."
-nfsn ${single_cert:+-s} list-aliases > letsencrypt.sh/domains.txt
+nfsn ${single_cert:+-s} list-aliases > domains.txt
 
 echo " + Performing initial run..."
-letsencrypt.sh/letsencrypt.sh --cron
+./letsencrypt.sh --cron
 
 user_site=${MAIL##*/}
 printf '
@@ -63,5 +64,5 @@ printf '
          is within 30 days of expiry.
 ' \
 	"${user_site%_*}" "$NFSN_SITE_NAME" \
-	"$(realpath nfsn-cron.sh)" \
+	"$(realpath ../nfsn-cron.sh)" \
 	"$(( $RANDOM % 24 ))"
