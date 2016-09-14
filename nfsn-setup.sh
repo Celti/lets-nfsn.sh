@@ -4,16 +4,16 @@ set -o errexit -o nounset -o pipefail
 readonly well_known='.well-known/acme-challenge/'
 declare single_cert='true'
 
-echo " + Cloning letsencrypt.sh git repository..."
+echo " + Cloning dehydrated git repository..."
 git submodule init
 git submodule update --remote
-mkdir -p letsencrypt.sh/.acme-challenges
+mkdir -p dehydrated/.acme-challenges
 
 echo " + Generating configuration..."
 for site_root in $(nfsn list-aliases); do
    if [[ -d "${DOCUMENT_ROOT}${site_root}/" ]]; then
       WELLKNOWN="${DOCUMENT_ROOT}${site_root}/${well_known}"
-      CONFIGDIR="letsencrypt.sh/certs/${site_root}/"
+      CONFIGDIR="dehydrated/certs/${site_root}/"
       mkdir -p "${WELLKNOWN}" "${CONFIGDIR}"
       echo "WELLKNOWN='${WELLKNOWN}'" > "${CONFIGDIR}/config"
       echo " + Installing hook script..."
@@ -26,17 +26,17 @@ done
 if [[ "${single_cert:+true}" ]]; then
    echo " + Generating fallback configuration..."
    mkdir -p "${DOCUMENT_ROOT}${well_known}"
-   echo "WELLKNOWN='${DOCUMENT_ROOT}${well_known}'" > letsencrypt.sh/config
+   echo "WELLKNOWN='${DOCUMENT_ROOT}${well_known}'" > dehydrated/config
    echo " + Installing hook script..."
-   echo "HOOK='$(realpath nfsn-hook.sh)'" >> letsencrypt.sh/config
+   echo "HOOK='$(realpath nfsn-hook.sh)'" >> dehydrated/config
    chmod +x nfsn-hook.sh
 fi
 
 echo " + Generating domains.txt..."
-nfsn ${single_cert:+-s} list-aliases > letsencrypt.sh/domains.txt
+nfsn ${single_cert:+-s} list-aliases > dehydrated/domains.txt
 
 echo " + Performing initial run..."
-letsencrypt.sh/letsencrypt.sh --cron
+dehydrated/dehydrated --cron
 
 user_site=${MAIL##*/}
 printf '
