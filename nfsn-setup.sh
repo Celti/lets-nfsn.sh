@@ -49,7 +49,7 @@ printf '
 
    and use the following settings:
 
-	Tag:                  letsencrypt
+	Tag:                  dehydrated
 	URL or Shell Command: %q
 	User:                 me
 	Hour:                 %d
