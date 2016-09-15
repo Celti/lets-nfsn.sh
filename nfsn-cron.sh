@@ -21,7 +21,8 @@ cd dehydrated
 
 echo " + Checking certificate expiration date..."
 declare -a checks=( $(find certs -name cert.pem -type l -exec openssl x509 -checkend 2592000 -in {} \;) )
-if contains "Certificate will expire" "${checks[@]}"; then
+echo " + ${checks[*]}"
+if [ "${checks[*]}" = "Certificate will expire" ]; then
 	echo " + Certificte will expire in 30 days or less! SSH into this site and"
 	echo "   run the following commands to renew your certificates:"
 	echo "	cd ~/lets-nfsn.sh/dehydrated/"
