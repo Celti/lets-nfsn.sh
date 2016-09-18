@@ -5,10 +5,10 @@ readonly well_known='.well-known/acme-challenge/'
 readonly hook_path=$(realpath nfsn-hook.sh)
 declare single_cert='true'
 
-echo " + Cloning letsencrypt.sh git repository..."
+echo " + Cloning dehydrated git repository..."
 git submodule init
 git submodule update --remote
-cd letsencrypt.sh
+cd dehydrated
 
 # write_config $config_dir $wellknown
 write_config() {
