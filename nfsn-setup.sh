@@ -34,7 +34,7 @@ echo " + Generating domains.txt..."
 nfsn ${single_cert:+-s} list-aliases > domains.txt
 
 echo " + Performing initial run..."
-./letsencrypt.sh --cron
+./dehydrated --cron
 
 user_site=${MAIL##*/}
 printf '

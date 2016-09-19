@@ -24,7 +24,7 @@ else
 	exit 0
 fi
 
-echo " + Running letsencrypt.sh..."
+echo " + Running dehydrated..."
 ./dehydrated --cron
 
 echo " + Cleaning up old certificates..."
