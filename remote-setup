@@ -1,60 +1,15 @@
-#!/usr/bin/env bash
-## Let’s Encrypt NearlyFreeSpeech.Net remote setup script
-## Copyright (c) 2016 by Michal Nazarewicz <mina86@mina86.com>
-##
-## Permission is hereby granted, free of charge, to any person obtaining a copy
-## of this software and associated documentation files (the "Software"), to deal
-## in the Software without restriction, including without limitation the rights
-## to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-## copies of the Software, and to permit persons to whom the Software is
-## furnished to do so, subject to the following conditions:
-##
-## The above copyright notice and this permission notice shall be included in
-## all copies or substantial portions of the Software.
-##
-## THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-## IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-## FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-## AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-## LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-## OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-## SOFTWARE.
+#!/bin/sh
 
-##
-## Script for setting up a cron job for installing and renewing Let’s Encrypt
-## certificates on a remote NearlyFreeSpeech.Net hosted website.  It uses SSH to
-## log into NFS machine and runs renew script, i.e.:
-##
-##    ./remote-setup ${username?}_${sitename?}@ssh.phx.nearlyfreespeech.net
-##
+cat >&2 <<EOF
 
-set -eu
+######################################################################
+#### mina86/lets-nfsn.sh repository  is deprecated.   This script ####
+#### does nothing (except for printing this message).             ####
+####                                                              ####
+#### Use  the  "official"  nfsn/lets-nfsn.sh  repository  instead ####
+#### which you can find at <https://github.com/nfsn/lets-nfsn.sh> ####
+######################################################################
 
-if [ $# -ne 1 ] || [ "$1" = -h ] || [ "$1" = --help ]; then
-	cat <<EOF >&2
-usage: $0 <host>
-
-Logs into <host> using ssh, clones the lets-nfsn.sh repository, installs
-certificates and provides instructions on how to enable cron job which will
-automatically renew certificates when needed.
-
-<host> is whatever you use to connect to NFSN host.  Normal NFSN address is
-    username_sitename@ssh.phx.nearlyfreespeech.net
-but whatever aliases are set in ~/.ssh/config will work too.
 EOF
-	exit 1
-fi
 
-repository=$(git remote get-url origin 2>/dev/null || true)
-repository=${repository:-https://github.com/mina86/lets-nfsn.sh.git}
-repository=$(printf %q "$repository")
-
-# shellcheck disable=SC2029
-ssh "$1" "
-	set -eu
-	cd /home/private
-	echo ' + Getting newest lets-nfsn.sh...'
-	git clone $repository
-	cd lets-nfsn.sh
-	./nfsn-setup.sh
-"
+exit 1

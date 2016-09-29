@@ -1,31 +1,21 @@
 #!/usr/bin/env bash
-set -o errexit -o nounset -o pipefail
+#et -o errexit -o nounset -o pipefail
 
-cd "$(dirname "$0")"
+#d "$(dirname "$0")"
 
-echo " + Updating lets-nfsn.sh..."
-git pull
+#cho " + Updating lets-nfsn.sh..."
+#it pull
 
-echo " + Updating dehydrated..."
-git submodule update --remote
-cd dehydrated
+cat >&2 <<EOF
 
-echo " + Checking certificate expiration date..."
-if find certs -name cert.pem -type l \
-	-exec openssl x509 -checkend 2592000 -in {} \; |
-		grep -qF "Certificate will expire"; then
-	echo " + Certificate will expire in 30 days or less! SSH into this site and"
-	echo "   run the following commands to renew your certificates:"
-	printf '	%q --cron\n' "$(realpath dehydrated)"
-	echo " + This error message will repeat daily."
-	exit 1
-else
-	echo " + More than 30 days until any certificate expires. Exiting."
-	exit 0
-fi
+######################################################################
+#### mina86/lets-nfsn.sh repository  is deprecated.   This script ####
+#### does nothing (except for printing this message).             ####
+####                                                              ####
+#### Use  the  "official"  nfsn/lets-nfsn.sh  repository  instead ####
+#### which you can find at <https://github.com/nfsn/lets-nfsn.sh> ####
+######################################################################
 
-echo " + Running dehydrated..."
-./dehydrated --cron
+EOF
 
-echo " + Cleaning up old certificates..."
-./dehydrated --cleanup
+exit 1
