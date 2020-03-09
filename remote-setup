@@ -1,10 +1,4 @@
-#!/usr/bin/env bash
-#et -o errexit -o nounset -o pipefail
-
-#d "$(dirname "$0")"
-
-#cho " + Updating lets-nfsn.sh..."
-#it pull
+#!/bin/sh
 
 cat >&2 <<EOF
 
