@@ -9,3 +9,5 @@ cd lets-nfsn.sh
 ```
 
 Follow the instructions on-screen from there.
+
+Rwar

@@ -15,17 +15,18 @@ cd "$(dirname "$0")"
 echo " + Updating lets-nfsn.sh..."
 git pull
 
-echo " + Updating letsencrypt.sh..."
+echo " + Updating dehydrated..."
 git submodule update --remote
-cd letsencrypt.sh
+cd dehydrated
 
 echo " + Checking certificate expiration date..."
 declare -a checks=( $(find certs -name cert.pem -type l -exec openssl x509 -checkend 2592000 -in {} \;) )
-if contains "Certificate will expire" "${checks[@]}"; then
+echo " + ${checks[*]}"
+if [ "${checks[*]}" = "Certificate will expire" ]; then
 	echo " + Certificte will expire in 30 days or less! SSH into this site and"
 	echo "   run the following commands to renew your certificates:"
-	echo "	cd ~/lets-nfsn.sh/letsencrypt.sh/"
-	echo "	./letsencrypt.sh --cron"
+	echo "	cd ~/lets-nfsn.sh/dehydrated/"
+	echo "	./dehydrated --cron"
 	echo " + This error message will repeat daily."
 	exit 1
 else
@@ -33,8 +34,8 @@ else
 	exit 0
 fi
 
-echo " + Running letsencrypt.sh..."
-./letsencrypt.sh --cron
+echo " + Running dehydrated..."
+./dehydrated --cron
 
 echo " + Cleaning up old certificates..."
-./letsencrypt.sh --cleanup
+./dehydrated --cleanup
